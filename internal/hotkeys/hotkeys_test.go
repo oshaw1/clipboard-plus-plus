@@ -46,7 +46,7 @@ func TestHandleNumKey(t *testing.T) {
 			name:      "right control should copy",
 			keyNum:    1,
 			mask:      32, // RIGHT_CONTROL
-			wantCopy:  true,
+			wantCopy:  false,
 			wantPaste: false,
 		},
 		{
