@@ -3,7 +3,7 @@ A multi-slot clipboard manager written in Go
 
 ## Usage
 
-Download the latest built binary from:
+Download the latest built binary from: https://github.com/oshaw1/clipboard-plus-plus/releases
 
 To build / run use a command such as `go build cmd/clipboardplusplus/main.go` or `go run cmd/clipboardplusplus/main.go`
 
