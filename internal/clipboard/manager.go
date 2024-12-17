@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/atotto/clipboard"
+	"github.com/go-vgo/robotgo"
 )
 
 type ClipboardManager struct {
@@ -37,9 +38,7 @@ func (cm *ClipboardManager) PasteFromSlot(slot int) error {
 		return fmt.Errorf("failed to retrieve content: %w", err)
 	}
 
-	if err := clipboard.WriteAll(text); err != nil {
-		return fmt.Errorf("failed to write to clipboard: %w", err)
-	}
+	robotgo.TypeStr(text)
 
 	fmt.Printf("Pasted from slot %d: %s\n", slot, truncateString(text, 50))
 	return nil

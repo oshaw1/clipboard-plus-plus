@@ -26,15 +26,12 @@ func main() {
 	signal.Notify(c, os.Interrupt)
 
 	printBanner()
-	printInstructions()
 
-	// Start hotkey handling
 	if err := hotkeyHandler.Start(); err != nil {
 		fmt.Printf("Error starting Clipboard++: %v\n", err)
 		os.Exit(1)
 	}
 
-	// Wait for interrupt
 	<-c
 	fmt.Println("\nShutting down Clipboard++...")
 	hotkeyHandler.Stop()
@@ -46,14 +43,8 @@ Clipboard++ v` + version + `
 A minimal clipboard manager for power users
 https://oshaw1.github.io
 
+Right-Ctrl+[1-9] to copy current clipboard to slot
+Left-Ctrl+[1-9] to paste from slot
 Press Ctrl+C to exit
 ─────────────────────────────────────`)
-}
-
-func printInstructions() {
-	fmt.Println("\nHotkey Instructions:")
-	fmt.Println("• Ctrl+Alt+Num[1-9] to copy to slots")
-	fmt.Println("• Ctrl+Num[1-9] to paste from slots")
-	fmt.Println("• Press Ctrl+C to exit")
-	fmt.Println("\nRunning...")
 }

@@ -19,42 +19,33 @@ func NewHandler(clipManager clipboard.Manager) *HotkeyHandler {
 
 func (h *HotkeyHandler) Start() error {
 	hook.Register(hook.KeyDown, []string{}, func(e hook.Event) {
-		fmt.Printf("Key event: Mask=%v, Keycode=%v, Rawcode=%v\n",
-			e.Mask, e.Keycode, e.Rawcode)
-
-		// Check for numpad keys and handle modifier masks
-		if e.Rawcode >= 87 && e.Rawcode <= 89 { // Numpad 1-3
-			keyNum := int(e.Rawcode - 86)
-			h.handleNumKey(keyNum, e.Mask)
-		} else if e.Rawcode >= 83 && e.Rawcode <= 85 { // Numpad 4-6
-			keyNum := int(e.Rawcode - 79)
-			h.handleNumKey(keyNum, e.Mask)
-		} else if e.Rawcode >= 79 && e.Rawcode <= 81 { // Numpad 7-9
-			keyNum := int(e.Rawcode - 72)
+		// Only process numpad keys (97-105 for 1-9)
+		if e.Rawcode >= 97 && e.Rawcode <= 105 {
+			keyNum := int(e.Rawcode - 96) // Convert to 1-9
 			h.handleNumKey(keyNum, e.Mask)
 		}
 	})
-
 	go hook.Process(hook.Start())
 	return nil
 }
 
 func (h *HotkeyHandler) handleNumKey(keyNum int, mask uint16) {
 	const (
-		MOD_CONTROL = 1 << 1
-		MOD_ALT     = 1 << 3
+		LEFT_CONTROL  = 1 << 1 // Mask: 2
+		RIGHT_CONTROL = 1 << 5 // Mask: 32
 	)
 
-	isCtrl := mask&MOD_CONTROL != 0
-	isAlt := mask&MOD_ALT != 0
-
-	if isCtrl && isAlt {
+	if mask == RIGHT_CONTROL {
 		if err := h.clipManager.CopyToSlot(keyNum); err != nil {
 			fmt.Printf("Error copying to slot %d: %v\n", keyNum, err)
+		} else {
+			fmt.Printf("Copied to slot %d\n", keyNum)
 		}
-	} else if isCtrl && !isAlt {
+	} else if mask == LEFT_CONTROL {
 		if err := h.clipManager.PasteFromSlot(keyNum); err != nil {
 			fmt.Printf("Error pasting from slot %d: %v\n", keyNum, err)
+		} else {
+			fmt.Printf("Pasted from slot %d\n", keyNum)
 		}
 	}
 }
